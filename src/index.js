@@ -37,26 +37,27 @@ function checksCreateTodosUserAvailability(request, response, next) {
 }
 /********** */
 function checksTodoExists(request, response, next) {
-  const { username } = request;
+  const { username } = request.headers;
   const { id } = request.params;
 
 
-  const user = users.find(user => user.username === username);
   if (!validate(id)) {
     return response.status(400).json({ error: "Not Found" });
   } 
 
+  
+  const user = users.find(user => user.username === username);
   if (!user) {
     return response.status(404).json({ error: "Not Found" });
   } 
  
     const todo = user.todos.find(todo => todo.id === id);
   if (!todo) {
-    return response.status(400).json({ error: "Not Found" });
-  }else{
+    return response.status(404).json({ error: "Not Found" });
+  }
     request.user = user;
     request.todo = todo;
-  }
+  
 
   
     
